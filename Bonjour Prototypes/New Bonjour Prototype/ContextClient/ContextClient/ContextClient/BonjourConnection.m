@@ -41,20 +41,22 @@ static NSString *const terminatorString = @"thisistheendofthemessage";
         _asyncSocket = nil;
     }
     [netServiceBrowser stop];
+    [connectionTimeout invalidate];
     serverService = nil;
     serverAddresses = nil;
 }
 
 -(BOOL)sendImage:(UIImage *)image
 {
-    if (![_asyncSocket isConnected])
-        return NO;
+    //if (![_asyncSocket isConnected])
+        //return NO;
     //create a data buffer
     //place the data
     //try to write
     outgoingDataBuffer = [[NSMutableData alloc]init];
     
     //Part 1: Message
+    NSLog(@"sending image");
     NSString *pingString = [[NSString alloc]initWithFormat:@"Image from %@", [[UIDevice currentDevice]name]];
     [outgoingDataBuffer appendData:[pingString dataUsingEncoding:NSUTF8StringEncoding]];
     
@@ -120,6 +122,7 @@ static NSString *const terminatorString = @"thisistheendofthemessage";
 			done = YES;
             [_asyncSocket setDelegate:self];
             NSLog(@"Connected to context at %@", [_asyncSocket connectedHost]);
+            [netServiceBrowser stop];
 		}
 		else
 		{
@@ -200,6 +203,7 @@ static NSString *const terminatorString = @"thisistheendofthemessage";
 	{
 		serverAddresses = [[sender addresses] mutableCopy];
         [netServiceBrowser stop];
+        [serverService stop];
 	}
 	
 	if (_asyncSocket == nil)

@@ -40,7 +40,7 @@ static NSString *const messageTerminator = @"message";
         _listeningSocket = [[GCDAsyncSocket alloc]initWithDelegate:self delegateQueue:listenQueue];
     }
     NSError *error;
-    if (![_listeningSocket acceptOnPort:9000 error:&error])
+    if (![_listeningSocket acceptOnPort:8080 error:&error])
     {
         NSLog(@"Connection didn't start listening");
         NSLog(@"Connection Error: %@", [error localizedDescription]);

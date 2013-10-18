@@ -8,7 +8,7 @@
 
 #import "MCConnection.h"
 
-static NSString *const terminatorString = @"end";
+static NSString *const terminatorString = @"thisistheendofthemessage";
 static NSInteger const packetSize = 1024;
 
 @implementation MCConnection

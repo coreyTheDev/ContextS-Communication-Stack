@@ -79,11 +79,23 @@ static NSString *const terminatorString = @"end";
 {
     if ([_streamSwitch isOn])
     {
+        if (!bonjourConnection)
+            bonjourConnection = [[BonjourConnection alloc]init];
+        
         [bonjourConnection connect];
     } else
     {
-        if (bonjourConnection)
+        //switch is off, disconnect from everything
+        if (bonjourConnection){
             [bonjourConnection disconnect];
+            if (multipeerTether)
+            {
+                [multipeerTether disconnect];
+                multipeerTether = nil;
+            }
+            [_tetherSwitch setEnabled:NO];
+            [_tetherLabel setEnabled:NO];
+        }
         else if (multipeerConnection)
             [multipeerConnection disconnect];
     }

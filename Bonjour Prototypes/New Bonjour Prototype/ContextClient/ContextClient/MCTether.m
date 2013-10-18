@@ -144,7 +144,6 @@
                 [incomingDataBuffer appendBytes:&buffer length:len];
                 totalBytesRead += len;
                 NSLog(@"Read %d bytes, total read bytes: %d",len, totalBytesRead);
-                
                 if (contextConnection)
                 {
                     NSMutableData *newData = [[NSMutableData alloc]init];
