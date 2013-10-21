@@ -85,11 +85,56 @@ static NSInteger const packetSize = 1024;
     [pictureBuffer appendData:[terminatorString dataUsingEncoding:NSUTF8StringEncoding]];
     
     //Part 3: Full size Image
-    [pictureBuffer appendData: UIImageJPEGRepresentation(image, 1)];
+    //[pictureBuffer appendData: UIImageJPEGRepresentation(image, 1)];
     
-    [pictureBuffer appendData:[terminatorString dataUsingEncoding:NSUTF8StringEncoding]];
+    //[pictureBuffer appendData:[terminatorString dataUsingEncoding:NSUTF8StringEncoding]];
     
-    return [self startStreamWithPeerID:middleMan];
+    return [self startMessageStreamWithPeerID:middleMan];
+}
+-(BOOL)sendImages:(NSArray *)images
+{
+    
+    if ([_session connectedPeers].count == 0)
+    {
+        NSLog(@"No connection to Bonjour Service: File send failed");
+        return NO;
+    }
+    //create a data buffer
+    //place the data
+    //try to write
+    pictureBuffer = [[NSMutableData alloc]init];
+    messageBuffer = [[NSMutableData alloc]init];
+    
+    //Part 1: Message
+    NSLog(@"sending image");
+    NSString *pingString = [[NSString alloc]initWithFormat:@"Images from %@", [[UIDevice currentDevice]name]];
+    [messageBuffer appendData:[pingString dataUsingEncoding:NSUTF8StringEncoding]];
+    [messageBuffer appendData:[terminatorString dataUsingEncoding:NSUTF8StringEncoding]];
+    
+    if (![self startNotifyStream:middleMan])
+    {
+        return NO;
+    }
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
+    {
+        return YES;
+    }
+    
+    //Part 2: Thumbnail
+    
+    for (UIImage *image in images)
+    {
+        [pictureBuffer appendData: UIImageJPEGRepresentation(image, .25)];
+    
+        [pictureBuffer appendData:[terminatorString dataUsingEncoding:NSUTF8StringEncoding]];
+    }
+    //Part 3: Full size Image
+    //[pictureBuffer appendData: UIImageJPEGRepresentation(image, 1)];
+    
+    //[pictureBuffer appendData:[terminatorString dataUsingEncoding:NSUTF8StringEncoding]];
+    
+    return [self startMessageStreamWithPeerID:middleMan];
+
 }
 
 -(BOOL)isConnected
@@ -103,13 +148,15 @@ static NSInteger const packetSize = 1024;
 
 
 #pragma mark - Additional Classes
--(BOOL)startStreamWithPeerID:(MCPeerID *)peerID
+-(BOOL)startMessageStreamWithPeerID:(MCPeerID *)peerID
 {
     //connection successful, open stream to connection
     NSError *releaseError;
+    //grab random name for stream, send stream to middle man
     pictureOutputStream = [_session startStreamWithName:@"imageStream" toPeer:peerID error:&releaseError];
     if (!pictureOutputStream)
     {
+        //grab error, determine reasoning behind error
         NSLog(@"Erorr occurred in creating stream");
         return NO;
     }
@@ -171,7 +218,6 @@ static NSInteger const packetSize = 1024;
     return len;
 }
 
-
 //DELEGATE METHODS
 
 
@@ -204,6 +250,8 @@ static NSInteger const packetSize = 1024;
 }
 -(void)session:(MCSession *)session didReceiveData:(NSData *)data fromPeer:(MCPeerID *)peerID
 {
+    //When we receive data: should only occur when a resume sending message is sent
+    
 }
 -(void)session:(MCSession *)session didStartReceivingResourceWithName:(NSString *)resourceName fromPeer:(MCPeerID *)peerID withProgress:(NSProgress *)progress
 {

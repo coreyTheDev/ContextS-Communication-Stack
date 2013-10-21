@@ -25,5 +25,6 @@
 -(void)connect;
 -(void)disconnect;
 -(BOOL)sendImage:(UIImage *)image;
+-(BOOL)sendImages:(NSArray *)images;
 -(BOOL)isConnected;
 @end

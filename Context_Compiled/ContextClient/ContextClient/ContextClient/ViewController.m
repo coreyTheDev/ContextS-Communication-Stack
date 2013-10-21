@@ -20,8 +20,9 @@ static NSString *const terminatorString = @"end";
 
 @implementation ViewController
 {
-    UIImagePickerController *imagePicker;
+    ELCImagePickerController *imagePicker;
     UIPopoverController *imagePopoverController;
+    NSMutableArray *imageArray;
     
     UIImage *selectedImage;
     
@@ -164,33 +165,71 @@ static NSString *const terminatorString = @"end";
 #pragma mark - Source Methods
 -(IBAction)showCameraPopup:(id)sender{
     
+    ELCAlbumPickerController *albumController = [[ELCAlbumPickerController alloc] initWithNibName: nil bundle: nil];
+	imagePicker = [[ELCImagePickerController alloc] initWithRootViewController:albumController];
+    imagePicker.maximumImagesCount = 100;
+    [albumController setParent:imagePicker];
+	[imagePicker setDelegate:self];
+    
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
     {
-        imagePicker = [[UIImagePickerController alloc] init];
-        imagePicker.sourceType = UIImagePickerControllerSourceTypeSavedPhotosAlbum;
-        [imagePicker setDelegate:self];
-        
-        // Displays saved pictures and movies, if both are available, from the
-        // Camera Roll album.
-        imagePicker.mediaTypes =
-        [UIImagePickerController availableMediaTypesForSourceType:
-         UIImagePickerControllerSourceTypeSavedPhotosAlbum];
-        
-        // Hides the controls for moving & scaling pictures, or for
-        // trimming movies. To instead show the controls, use YES.
-        imagePicker.allowsEditing = NO;
-        
-        imagePicker.delegate = self;
-        
         [self presentViewController:imagePicker animated:YES completion:nil];
     }
     else if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
     {
-        imagePicker = [[UIImagePickerController alloc]init];
-        [imagePicker setDelegate:self];
         imagePopoverController = [[UIPopoverController alloc]initWithContentViewController:imagePicker];
         [imagePopoverController presentPopoverFromRect:[_imageSelectButton frame] inView:[self view]  permittedArrowDirections:UIPopoverArrowDirectionUp animated:YES];
     }
+}
+-(void)elcImagePickerController:(ELCImagePickerController *)picker didFinishPickingMediaWithInfo:(NSArray *)info
+{
+    //Here we have an array of NSDictionary objects
+    /*
+        Loop through
+        Grab each photo
+        Downsize to .25 quality
+        Add it to secondary array
+     */
+    imageArray = [[NSMutableArray alloc]init];
+    for (NSDictionary *photoInfo in info)
+    {
+        UIImage *temp = [photoInfo valueForKey:UIImagePickerControllerOriginalImage];
+        [imageArray addObject:temp];
+        NSLog(@"Number of images = %d", [imageArray count]);
+    }
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
+    {
+        [self dismissViewControllerAnimated:YES completion:nil];
+    } else if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
+    {
+        [imagePopoverController dismissPopoverAnimated:YES];
+    }
+    
+    [self sendImages];
+}
+-(void)elcImagePickerControllerDidCancel:(ELCImagePickerController *)picker
+{
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
+    {
+        [self dismissViewControllerAnimated:NO completion:nil];
+    }
+    else if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
+    {
+        [imagePopoverController dismissPopoverAnimated:YES];
+    }
+
+}
+
+-(void)sendImages
+{
+    /*
+       Loop through images array
+        send each image through whatever connection is available
+     */
+    if (bonjourConnection)
+        [bonjourConnection sendImages:imageArray];
+    else if (multipeerConnection)
+        [multipeerConnection sendImages:imageArray];
 }
 
 -(void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info

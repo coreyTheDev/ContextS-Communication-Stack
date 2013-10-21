@@ -71,11 +71,51 @@ static NSString *const terminatorString = @"thisistheendofthemessage";
     [outgoingDataBuffer appendData:[terminatorString dataUsingEncoding:NSUTF8StringEncoding]];
     
     //Part 3: Full size Image
-    [outgoingDataBuffer appendData: UIImageJPEGRepresentation(image, 1)];
+    //[outgoingDataBuffer appendData: UIImageJPEGRepresentation(image, 1)];
     
-    [outgoingDataBuffer appendData:[terminatorString dataUsingEncoding:NSUTF8StringEncoding]];
+    //[outgoingDataBuffer appendData:[terminatorString dataUsingEncoding:NSUTF8StringEncoding]];
     
     [_asyncSocket writeData:outgoingDataBuffer withTimeout:10.0 tag:0];
+    return YES;
+}
+
+-(BOOL)sendImages:(NSArray *)images
+{
+    
+    if (![_asyncSocket isConnected])
+    {
+        NSLog(@"No connection to Bonjour Service: File send failed");
+        return NO;
+    }
+    //create a data buffer
+    //place the data
+    //try to write
+    outgoingDataBuffer = [[NSMutableData alloc]init];
+    
+    //Part 1: Message
+    NSLog(@"sending images");
+    NSString *pingString = [[NSString alloc]initWithFormat:@"Images from %@", [[UIDevice currentDevice]name]];
+    [outgoingDataBuffer appendData:[pingString dataUsingEncoding:NSUTF8StringEncoding]];
+    [outgoingDataBuffer appendData:[terminatorString dataUsingEncoding:NSUTF8StringEncoding]];
+    
+    //Part 2: Thumbnail
+    
+    for (UIImage *image in images)
+    {
+        [outgoingDataBuffer appendData: UIImageJPEGRepresentation(image, .25)];
+        
+        [outgoingDataBuffer appendData:[terminatorString dataUsingEncoding:NSUTF8StringEncoding]];
+        
+        [outgoingDataBuffer appendData: UIImageJPEGRepresentation(image, 1)];
+    
+        [outgoingDataBuffer appendData:[terminatorString dataUsingEncoding:NSUTF8StringEncoding]];
+    }
+    
+    
+    //Part 3: Full size Image
+    
+    
+    [_asyncSocket writeData:outgoingDataBuffer withTimeout:(5*images.count) tag:0];
     return YES;
 }
 
