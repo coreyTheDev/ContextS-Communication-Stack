@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>0FD60889-F200-4752-8AE8-20A82E87A717</string>
+	<key>IDESourceControlProjectName</key>
+	<string>ContextClient</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>DE7981B1-DAEA-4D54-ACAE-0C3168FA4AEE</key>
+		<string>https://github.com/coreyZambonie/ContextS-Communication-Stack.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>Bonjour Prototypes/New Bonjour Prototype/ContextClient/ContextClient/ContextClient.xcworkspace</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>DE7981B1-DAEA-4D54-ACAE-0C3168FA4AEE</key>
+		<string>../../../../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/coreyZambonie/ContextS-Communication-Stack.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>110</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>DE7981B1-DAEA-4D54-ACAE-0C3168FA4AEE</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>DE7981B1-DAEA-4D54-ACAE-0C3168FA4AEE</string>
+			<key>IDESourceControlWCCName</key>
+			<string>ContextS-Communication-Stack</string>
+		</dict>
+	</array>
+</dict>
+</plist>
