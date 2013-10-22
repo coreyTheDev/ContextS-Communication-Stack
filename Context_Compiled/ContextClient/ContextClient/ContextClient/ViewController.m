@@ -48,12 +48,15 @@ static NSString *const terminatorString = @"end";
     
     
     bonjourConnection = [[BonjourConnection alloc]init];
+    [bonjourConnection connect];
     
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(establishConnection:) name:@"BONJOUR_CONNECTION" object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(bonjourFail:) name:@"BONJOUR_TIMEOUT" object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(updateProgress:) name:@"PROGRESS" object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(dismissConnectionView:) name:@"DISMISS_CONNECTIONVIEW" object:nil];
     
     connectionView = [[CustomAlertViewViewController alloc]init];
+    [[self view] addSubview:[connectionView view]];
     [self presentViewController:connectionView animated:YES completion:nil];
 }
 -(void)viewWillAppear:(BOOL)animated
@@ -110,6 +113,7 @@ static NSString *const terminatorString = @"end";
 {
     [bonjourConnection disconnect];
     bonjourConnection = nil;
+    [connectionView updateMessageWithString:@"No Bonjour service found. Connecting through P2P."];
     [self multipeerInit];
 }
 -(IBAction)createTether:(id)sender
@@ -158,7 +162,15 @@ static NSString *const terminatorString = @"end";
         [_tetherLabel setEnabled:YES];
         
         [_tetherSwitch addTarget:self action:@selector(createTether:) forControlEvents:UIControlEventValueChanged];
+        
+        [connectionView updateMessageWithString:@"Connected with Bonjour"];
+    } else {
+        [connectionView updateMessageWithString:@"Connected through P2P"];
     }
+}
+-(void)dismissConnectionView:(NSNotification *)note
+{
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 

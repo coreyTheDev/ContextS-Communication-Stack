@@ -29,8 +29,9 @@
     if (self)
     {
         [self.view setBackgroundColor:[UIColor colorWithRed:.33 green:.33 blue:.33 alpha:.75]];
-        //[_viewBG setFrame:[[UIScreen mainScreen]bounds]];
-        //[_activityView s]
+        [self.view setFrame:[[UIScreen mainScreen]bounds]];
+        [_activityView startAnimating];
+        
     }
     return self;
 }
@@ -48,10 +49,12 @@
 }
 -(IBAction)dismissModalView:(id)sender
 {
-    [self removeFromParentViewController];
+    [[self view]removeFromSuperview];
 }
 -(void)updateMessageWithString:(NSString *)newMessage
 {
-    [_statusField setText:newMessage];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [_statusField setText:newMessage];
+    });
 }
 @end

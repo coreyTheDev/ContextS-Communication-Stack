@@ -26,7 +26,7 @@ static NSString *const terminatorString = @"thisistheendofthemessage";
 
 -(void)connect
 {
-    [netServiceBrowser searchForServicesOfType:@"_context._tcp." inDomain:@""];
+    [netServiceBrowser searchForServicesOfType:@"_zanotti-MacBookPro._http_tcp." inDomain:@""];
     
     connectionTimeout = [NSTimer timerWithTimeInterval:5.0 target:self selector:@selector(connectionTimeout:) userInfo:nil repeats:NO];
     NSRunLoop *runner = [NSRunLoop currentRunLoop];
