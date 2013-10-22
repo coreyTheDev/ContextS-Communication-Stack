@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+
 #import "GCDAsyncSocket.h"
 
 @interface BonjourConnection : NSObject <NSNetServiceBrowserDelegate, NSNetServiceDelegate, NSStreamDelegate>

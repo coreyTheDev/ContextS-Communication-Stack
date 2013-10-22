@@ -26,7 +26,7 @@ static NSString *const terminatorString = @"thisistheendofthemessage";
 
 -(void)connect
 {
-    [netServiceBrowser searchForServicesOfType:@"_zanotti-MacBookPro._http_tcp." inDomain:@""];
+    [netServiceBrowser searchForServicesOfType:@"_context._tcp." inDomain:@"local."];
     
     connectionTimeout = [NSTimer timerWithTimeInterval:5.0 target:self selector:@selector(connectionTimeout:) userInfo:nil repeats:NO];
     NSRunLoop *runner = [NSRunLoop currentRunLoop];
@@ -189,7 +189,7 @@ static NSString *const terminatorString = @"thisistheendofthemessage";
 {
     [[NSNotificationCenter defaultCenter] postNotificationName:@"BONJOUR_TIMEOUT" object:nil];
     NSLog(@"Bonjour Service Timedout");
-    [netServiceBrowser stop];
+    [netServiceBrowser stop]; 
 }
 
 

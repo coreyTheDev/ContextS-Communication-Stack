@@ -39,7 +39,7 @@ static NSString *const terminatorString = @"thisistheendofthemessage";
         
         netService = [[NSNetService alloc] initWithDomain:@""
                                                      type:@"_context._tcp."
-                                                     name:@""
+                                                     name:@"context"
                                                      port:port];
         
         [netService setDelegate:self];
